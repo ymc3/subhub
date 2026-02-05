@@ -1,5 +1,7 @@
 # SubHub
 
+[![CI](https://github.com/ymc3/subhub/actions/workflows/ci.yml/badge.svg)](https://github.com/ymc3/subhub/actions/workflows/ci.yml)
+
 Minimal subscription backend (portfolio project). Built with **Java 17 + Spring Boot 3**.
 
 ## Quick start
