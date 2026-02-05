@@ -24,5 +24,35 @@ Example response:
 {"status":"ok","service":"subhub"}
 ```
 
+## API
+
+### Create user
+
+```bash
+curl -sS -X POST http://127.0.0.1:8080/users \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Alice","email":"alice@example.com"}'
+```
+
+### Get user
+
+```bash
+curl -sS http://127.0.0.1:8080/users/1001
+```
+
+### Create subscription (defaults to TRIAL)
+
+```bash
+curl -sS -X POST http://127.0.0.1:8080/subscriptions \
+  -H 'Content-Type: application/json' \
+  -d '{"userId":1001,"plan":"basic"}'
+```
+
+### Get subscription
+
+```bash
+curl -sS http://127.0.0.1:8080/subscriptions/5001
+```
+
 ## Notes
-- This is v0 scaffold. Next: Users + Subscriptions endpoints.
+- Storage is in-memory for now (no database yet). Restarting the app resets data.
