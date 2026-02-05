@@ -39,14 +39,10 @@ public class SubscriptionController {
     UserEntity user = userRepository.findById(req.userId())
         .orElseThrow(() -> new IllegalArgumentException("user not found: " + req.userId()));
 
-    var now = Instant.now();
-
     SubscriptionEntity e = new SubscriptionEntity();
     e.setUser(user);
     e.setPlan(req.plan());
     e.setStatus(SubscriptionStatus.TRIAL);
-    e.setCreatedAt(now);
-    e.setUpdatedAt(now);
 
     SubscriptionEntity saved = subscriptionRepository.save(e);
     return new Subscription(
@@ -141,7 +137,6 @@ public class SubscriptionController {
     }
 
     e.setStatus(next);
-    e.setUpdatedAt(Instant.now());
     SubscriptionEntity saved = subscriptionRepository.save(e);
     return new Subscription(
         saved.getId(),

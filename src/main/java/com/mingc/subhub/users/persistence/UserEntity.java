@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +30,18 @@ public class UserEntity {
 
   @Column(name = "updated_at", nullable = false)
   private Instant updatedAt;
+
+  @PrePersist
+  void onCreate() {
+    Instant now = Instant.now();
+    if (createdAt == null) createdAt = now;
+    if (updatedAt == null) updatedAt = now;
+  }
+
+  @PreUpdate
+  void onUpdate() {
+    updatedAt = Instant.now();
+  }
 
   public Long getId() {
     return id;
