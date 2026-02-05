@@ -1,6 +1,11 @@
 package com.mingc.subhub.subscriptions;
 
-import com.mingc.subhub.users.UserStore;
+import java.time.Instant;
+
+import com.mingc.subhub.subscriptions.persistence.SubscriptionEntity;
+import com.mingc.subhub.subscriptions.persistence.SubscriptionRepository;
+import com.mingc.subhub.users.persistence.UserEntity;
+import com.mingc.subhub.users.persistence.UserRepository;
 
 import jakarta.validation.Valid;
 
@@ -14,26 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SubscriptionController {
-  private final SubscriptionStore subscriptionStore;
-  private final UserStore userStore;
+  private final SubscriptionRepository subscriptionRepository;
+  private final UserRepository userRepository;
 
-  public SubscriptionController(SubscriptionStore subscriptionStore, UserStore userStore) {
-    this.subscriptionStore = subscriptionStore;
-    this.userStore = userStore;
+  public SubscriptionController(SubscriptionRepository subscriptionRepository, UserRepository userRepository) {
+    this.subscriptionRepository = subscriptionRepository;
+    this.userRepository = userRepository;
   }
 
   @PostMapping("/subscriptions")
   @ResponseStatus(HttpStatus.CREATED)
   public Subscription create(@Valid @RequestBody CreateSubscriptionRequest req) {
-    if (!userStore.exists(req.userId())) {
-      throw new IllegalArgumentException("user not found: " + req.userId());
-    }
-    return subscriptionStore.create(req.userId(), req.plan());
+    UserEntity user = userRepository.findById(req.userId())
+        .orElseThrow(() -> new IllegalArgumentException("user not found: " + req.userId()));
+
+    SubscriptionEntity e = new SubscriptionEntity();
+    e.setUser(user);
+    e.setPlan(req.plan());
+    e.setStatus(SubscriptionStatus.TRIAL);
+    e.setCreatedAt(Instant.now());
+
+    SubscriptionEntity saved = subscriptionRepository.save(e);
+    return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
   }
 
   @GetMapping("/subscriptions/{id}")
   public Subscription get(@PathVariable long id) {
-    return subscriptionStore.get(id)
+    SubscriptionEntity e = subscriptionRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("subscription not found: " + id));
+    return new Subscription(e.getId(), e.getUser().getId(), e.getPlan(), e.getStatus());
   }
 }

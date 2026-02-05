@@ -6,8 +6,16 @@ Minimal subscription backend (portfolio project). Built with **Java 17 + Spring 
 
 ## Quick start
 
+Start Postgres:
+
 ```bash
 cd /home/mingc/projects/subhub/subhub
+docker compose up -d
+```
+
+Run the app:
+
+```bash
 mvn test
 mvn spring-boot:run
 ```
