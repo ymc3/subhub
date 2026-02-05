@@ -1,4 +1,4 @@
-package com.mingc.subhub.subscriptions;
+package com.mingc.subhub.pojo;
 
 public enum SubscriptionStatus {
   TRIAL,

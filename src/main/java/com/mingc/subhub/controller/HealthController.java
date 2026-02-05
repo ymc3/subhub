@@ -1,4 +1,4 @@
-package com.mingc.subhub;
+package com.mingc.subhub.controller;
 
 import java.util.Map;
 

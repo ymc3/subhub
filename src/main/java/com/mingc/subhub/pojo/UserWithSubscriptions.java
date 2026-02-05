@@ -1,8 +1,8 @@
-package com.mingc.subhub.users;
+package com.mingc.subhub.pojo;
 
 import java.util.List;
 
-import com.mingc.subhub.subscriptions.Subscription;
+import com.mingc.subhub.pojo.Subscription;
 
 public record UserWithSubscriptions(
     User user,

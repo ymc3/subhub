@@ -1,4 +1,4 @@
-package com.mingc.subhub.users;
+package com.mingc.subhub.pojo;
 
 import java.time.Instant;
 

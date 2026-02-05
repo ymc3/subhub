@@ -1,8 +1,9 @@
-package com.mingc.subhub.subscriptions.persistence;
+package com.mingc.subhub.repository;
 
 import java.time.Instant;
 
-import com.mingc.subhub.subscriptions.SubscriptionStatus;
+import com.mingc.subhub.pojo.SubscriptionStatus;
+import com.mingc.subhub.repository.UserEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,7 @@ public class SubscriptionEntity {
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "user_id", nullable = false)
-  private com.mingc.subhub.users.persistence.UserEntity user;
+  private UserEntity user;
 
   @Column(nullable = false)
   private String plan;
@@ -62,11 +63,11 @@ public class SubscriptionEntity {
     this.id = id;
   }
 
-  public com.mingc.subhub.users.persistence.UserEntity getUser() {
+  public UserEntity getUser() {
     return user;
   }
 
-  public void setUser(com.mingc.subhub.users.persistence.UserEntity user) {
+  public void setUser(UserEntity user) {
     this.user = user;
   }
 

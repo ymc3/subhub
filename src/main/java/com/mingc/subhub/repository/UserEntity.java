@@ -1,4 +1,4 @@
-package com.mingc.subhub.users.persistence;
+package com.mingc.subhub.repository;
 
 import java.time.Instant;
 

@@ -1,4 +1,4 @@
-package com.mingc.subhub.subscriptions.persistence;
+package com.mingc.subhub.repository;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.mingc.subhub.subscriptions.SubscriptionStatus;
+import com.mingc.subhub.pojo.SubscriptionStatus;
 
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
   List<SubscriptionEntity> findByUser_IdOrderByIdAsc(Long userId);
