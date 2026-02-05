@@ -68,6 +68,20 @@ curl -sS -X POST http://127.0.0.1:8080/subscriptions \
 curl -sS http://127.0.0.1:8080/subscriptions/1
 ```
 
+### List subscriptions (paged)
+
+All subscriptions:
+
+```bash
+curl -sS 'http://127.0.0.1:8080/subscriptions?page=0&size=20'
+```
+
+By user:
+
+```bash
+curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&page=0&size=20'
+```
+
 ### Update subscription status (activate/cancel)
 
 ```bash
