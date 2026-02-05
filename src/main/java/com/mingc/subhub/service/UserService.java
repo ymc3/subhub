@@ -63,7 +63,8 @@ public class UserService {
         e.getPlan(),
         e.getStatus(),
         e.getCreatedAt(),
-        e.getUpdatedAt()
+        e.getUpdatedAt(),
+        e.getExpiresAt()
     );
   }
 }

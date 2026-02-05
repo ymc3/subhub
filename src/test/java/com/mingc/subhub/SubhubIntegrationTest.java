@@ -60,7 +60,7 @@ class SubhubIntegrationTest {
 
     // create subscription
     var createSub = new HttpEntity<>(
-        "{\"userId\":" + userId.longValue() + ",\"plan\":\"basic\"}",
+        "{\"userId\":" + userId.longValue() + ",\"plan\":\"BASIC\"}",
         headers
     );
     ResponseEntity<Map> subResp = rest.postForEntity("/api/subscriptions", createSub, Map.class);

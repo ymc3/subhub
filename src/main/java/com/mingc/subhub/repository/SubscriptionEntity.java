@@ -31,7 +31,8 @@ public class SubscriptionEntity {
   private UserEntity user;
 
   @Column(nullable = false)
-  private String plan;
+  @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.STRING)
+  private com.mingc.subhub.pojo.SubscriptionPlan plan;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
@@ -42,6 +43,9 @@ public class SubscriptionEntity {
 
   @Column(name = "updated_at", nullable = false)
   private Instant updatedAt;
+
+  @Column(name = "expires_at")
+  private Instant expiresAt;
 
   @PrePersist
   void onCreate() {
@@ -71,11 +75,11 @@ public class SubscriptionEntity {
     this.user = user;
   }
 
-  public String getPlan() {
+  public com.mingc.subhub.pojo.SubscriptionPlan getPlan() {
     return plan;
   }
 
-  public void setPlan(String plan) {
+  public void setPlan(com.mingc.subhub.pojo.SubscriptionPlan plan) {
     this.plan = plan;
   }
 
@@ -101,5 +105,13 @@ public class SubscriptionEntity {
 
   public void setUpdatedAt(Instant updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  public Instant getExpiresAt() {
+    return expiresAt;
+  }
+
+  public void setExpiresAt(Instant expiresAt) {
+    this.expiresAt = expiresAt;
   }
 }

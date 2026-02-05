@@ -12,17 +12,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mingc.subhub.pojo.CreateUserRequest;
+import com.mingc.subhub.pojo.Subscription;
+import com.mingc.subhub.pojo.UpgradeSubscriptionRequest;
 import com.mingc.subhub.pojo.User;
 import com.mingc.subhub.pojo.UserWithSubscriptions;
+import com.mingc.subhub.service.SubscriptionService;
 import com.mingc.subhub.service.UserService;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
   private final UserService userService;
+  private final SubscriptionService subscriptionService;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, SubscriptionService subscriptionService) {
     this.userService = userService;
+    this.subscriptionService = subscriptionService;
   }
 
   @PostMapping("/users")
@@ -39,5 +44,10 @@ public class UserController {
   @GetMapping("/users/{id}/with-subscriptions")
   public UserWithSubscriptions getWithSubscriptions(@PathVariable long id) {
     return userService.getUserWithSubscriptions(id);
+  }
+
+  @PostMapping("/users/{id}/subscriptions/upgrade")
+  public Subscription upgradeSubscription(@PathVariable long id, @Valid @RequestBody UpgradeSubscriptionRequest req) {
+    return subscriptionService.upgrade(id, req.plan());
   }
 }

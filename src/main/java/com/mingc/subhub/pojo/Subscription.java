@@ -5,8 +5,9 @@ import java.time.Instant;
 public record Subscription(
     long id,
     long userId,
-    String plan,
+    SubscriptionPlan plan,
     SubscriptionStatus status,
     Instant createdAt,
-    Instant updatedAt
+    Instant updatedAt,
+    Instant expiresAt
 ) {}

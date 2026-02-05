@@ -1,11 +1,16 @@
 package com.mingc.subhub.service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.mingc.subhub.common.PagedResponse;
 import com.mingc.subhub.pojo.Subscription;
+import com.mingc.subhub.pojo.SubscriptionPlan;
 import com.mingc.subhub.pojo.SubscriptionStatus;
 import com.mingc.subhub.repository.SubscriptionEntity;
 import com.mingc.subhub.repository.SubscriptionRepository;
@@ -22,14 +27,45 @@ public class SubscriptionService {
     this.userRepository = userRepository;
   }
 
-  public Subscription create(long userId, String plan) {
+  public Subscription create(long userId, SubscriptionPlan plan) {
     UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+
+    // Enforce: at most one current subscription (ACTIVE/TRIAL) per user.
+    subscriptionRepository
+        .findTopByUser_IdAndStatusInOrderByUpdatedAtDesc(userId, List.of(SubscriptionStatus.ACTIVE, SubscriptionStatus.TRIAL))
+        .ifPresent(existing -> {
+          throw new IllegalArgumentException(
+              "user already has an ACTIVE/TRIAL subscription (id=" + existing.getId() + "); use upgrade endpoint");
+        });
 
     SubscriptionEntity e = new SubscriptionEntity();
     e.setUser(user);
     e.setPlan(plan);
     e.setStatus(SubscriptionStatus.TRIAL);
+    e.setExpiresAt(Instant.now().plus(14, ChronoUnit.DAYS));
+
+    SubscriptionEntity saved = subscriptionRepository.save(e);
+    return toPojo(saved);
+  }
+
+  public Subscription upgrade(long userId, SubscriptionPlan plan) {
+    UserEntity user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("user not found: " + userId));
+
+    // Cancel current ACTIVE/TRIAL if present (end-of-term semantics: keep expiresAt as-is)
+    subscriptionRepository
+        .findTopByUser_IdAndStatusInOrderByUpdatedAtDesc(userId, List.of(SubscriptionStatus.ACTIVE, SubscriptionStatus.TRIAL))
+        .ifPresent(existing -> {
+          existing.setStatus(SubscriptionStatus.CANCELED);
+          subscriptionRepository.save(existing);
+        });
+
+    SubscriptionEntity e = new SubscriptionEntity();
+    e.setUser(user);
+    e.setPlan(plan);
+    e.setStatus(SubscriptionStatus.ACTIVE);
+    e.setExpiresAt(Instant.now().plus(30, ChronoUnit.DAYS));
 
     SubscriptionEntity saved = subscriptionRepository.save(e);
     return toPojo(saved);
@@ -100,7 +136,8 @@ public class SubscriptionService {
         e.getPlan(),
         e.getStatus(),
         e.getCreatedAt(),
-        e.getUpdatedAt()
+        e.getUpdatedAt(),
+        e.getExpiresAt()
     );
   }
 }
