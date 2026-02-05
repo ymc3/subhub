@@ -106,16 +106,21 @@ Response shape:
 }
 ```
 
-### Update subscription status (activate/cancel)
+### Update subscription status
+
+Option A (generic):
 
 ```bash
 curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
   -H 'Content-Type: application/json' \
   -d '{"status":"ACTIVE"}'
+```
 
-curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
-  -H 'Content-Type: application/json' \
-  -d '{"status":"CANCELED"}'
+Option B (actions):
+
+```bash
+curl -sS -X POST http://127.0.0.1:8080/subscriptions/1/activate
+curl -sS -X POST http://127.0.0.1:8080/subscriptions/1/cancel
 ```
 
 ## Notes

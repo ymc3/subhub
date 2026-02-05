@@ -116,12 +116,25 @@ public class SubscriptionController {
 
   @PutMapping("/subscriptions/{id}")
   public Subscription updateStatus(@PathVariable long id, @Valid @RequestBody UpdateSubscriptionStatusRequest req) {
+    return setStatus(id, req.status());
+  }
+
+  @PostMapping("/subscriptions/{id}/cancel")
+  public Subscription cancel(@PathVariable long id) {
+    return setStatus(id, SubscriptionStatus.CANCELED);
+  }
+
+  @PostMapping("/subscriptions/{id}/activate")
+  public Subscription activate(@PathVariable long id) {
+    return setStatus(id, SubscriptionStatus.ACTIVE);
+  }
+
+  private Subscription setStatus(long id, SubscriptionStatus next) {
     SubscriptionEntity e = subscriptionRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("subscription not found: " + id));
 
     // Minimal state machine rules (can be expanded later)
     SubscriptionStatus current = e.getStatus();
-    SubscriptionStatus next = req.status();
 
     if (current == SubscriptionStatus.CANCELED && next != SubscriptionStatus.CANCELED) {
       throw new IllegalArgumentException("cannot transition from CANCELED to " + next);
