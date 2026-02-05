@@ -45,14 +45,14 @@ public class UserController {
     e.setUpdatedAt(now);
 
     UserEntity saved = userRepository.save(e);
-    return new User(saved.getId(), saved.getName(), saved.getEmail());
+    return new User(saved.getId(), saved.getName(), saved.getEmail(), saved.getCreatedAt(), saved.getUpdatedAt());
   }
 
   @GetMapping("/users/{id}")
   public User get(@PathVariable long id) {
     UserEntity e = userRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("user not found: " + id));
-    return new User(e.getId(), e.getName(), e.getEmail());
+    return new User(e.getId(), e.getName(), e.getEmail(), e.getCreatedAt(), e.getUpdatedAt());
   }
 
   @GetMapping("/users/{id}/with-subscriptions")
@@ -66,11 +66,13 @@ public class UserController {
             s.getId(),
             s.getUser().getId(),
             s.getPlan(),
-            s.getStatus()
+            s.getStatus(),
+            s.getCreatedAt(),
+            s.getUpdatedAt()
         ))
         .toList();
 
-    User user = new User(u.getId(), u.getName(), u.getEmail());
+    User user = new User(u.getId(), u.getName(), u.getEmail(), u.getCreatedAt(), u.getUpdatedAt());
     return new UserWithSubscriptions(user, subs);
   }
 }

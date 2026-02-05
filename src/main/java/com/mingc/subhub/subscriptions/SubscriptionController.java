@@ -49,14 +49,28 @@ public class SubscriptionController {
     e.setUpdatedAt(now);
 
     SubscriptionEntity saved = subscriptionRepository.save(e);
-    return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
+    return new Subscription(
+        saved.getId(),
+        saved.getUser().getId(),
+        saved.getPlan(),
+        saved.getStatus(),
+        saved.getCreatedAt(),
+        saved.getUpdatedAt()
+    );
   }
 
   @GetMapping("/subscriptions/{id}")
   public Subscription get(@PathVariable long id) {
     SubscriptionEntity e = subscriptionRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("subscription not found: " + id));
-    return new Subscription(e.getId(), e.getUser().getId(), e.getPlan(), e.getStatus());
+    return new Subscription(
+        e.getId(),
+        e.getUser().getId(),
+        e.getPlan(),
+        e.getStatus(),
+        e.getCreatedAt(),
+        e.getUpdatedAt()
+    );
   }
 
   @GetMapping("/subscriptions")
@@ -85,7 +99,9 @@ public class SubscriptionController {
             e.getId(),
             e.getUser().getId(),
             e.getPlan(),
-            e.getStatus()
+            e.getStatus(),
+            e.getCreatedAt(),
+            e.getUpdatedAt()
         ))
         .toList();
 
@@ -114,6 +130,13 @@ public class SubscriptionController {
     e.setStatus(next);
     e.setUpdatedAt(Instant.now());
     SubscriptionEntity saved = subscriptionRepository.save(e);
-    return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
+    return new Subscription(
+        saved.getId(),
+        saved.getUser().getId(),
+        saved.getPlan(),
+        saved.getStatus(),
+        saved.getCreatedAt(),
+        saved.getUpdatedAt()
+    );
   }
 }
