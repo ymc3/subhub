@@ -45,7 +45,13 @@ curl -sS -X POST http://127.0.0.1:8080/users \
 ### Get user
 
 ```bash
-curl -sS http://127.0.0.1:8080/users/1001
+curl -sS http://127.0.0.1:8080/users/1
+```
+
+### Get user with subscriptions
+
+```bash
+curl -sS http://127.0.0.1:8080/users/1/with-subscriptions
 ```
 
 ### Create subscription (defaults to TRIAL)
