@@ -82,6 +82,18 @@ By user:
 curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&page=0&size=20'
 ```
 
+Response shape:
+
+```json
+{
+  "items": [],
+  "page": 0,
+  "size": 20,
+  "totalItems": 0,
+  "totalPages": 0
+}
+```
+
 ### Update subscription status (activate/cancel)
 
 ```bash
