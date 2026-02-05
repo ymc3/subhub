@@ -37,6 +37,9 @@ public class SubscriptionEntity {
   @Column(name = "created_at", nullable = false)
   private Instant createdAt;
 
+  @Column(name = "updated_at", nullable = false)
+  private Instant updatedAt;
+
   public Long getId() {
     return id;
   }
@@ -75,5 +78,13 @@ public class SubscriptionEntity {
 
   public void setCreatedAt(Instant createdAt) {
     this.createdAt = createdAt;
+  }
+
+  public Instant getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Instant updatedAt) {
+    this.updatedAt = updatedAt;
   }
 }

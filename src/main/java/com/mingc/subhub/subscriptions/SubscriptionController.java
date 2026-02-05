@@ -39,11 +39,14 @@ public class SubscriptionController {
     UserEntity user = userRepository.findById(req.userId())
         .orElseThrow(() -> new IllegalArgumentException("user not found: " + req.userId()));
 
+    var now = Instant.now();
+
     SubscriptionEntity e = new SubscriptionEntity();
     e.setUser(user);
     e.setPlan(req.plan());
     e.setStatus(SubscriptionStatus.TRIAL);
-    e.setCreatedAt(Instant.now());
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
 
     SubscriptionEntity saved = subscriptionRepository.save(e);
     return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
@@ -59,6 +62,7 @@ public class SubscriptionController {
   @GetMapping("/subscriptions")
   public PagedResponse<Subscription> list(
       @RequestParam(required = false) Long userId,
+      @RequestParam(required = false) SubscriptionStatus status,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "20") int size
   ) {
@@ -66,9 +70,15 @@ public class SubscriptionController {
     if (size < 1 || size > 100) throw new IllegalArgumentException("size must be between 1 and 100");
 
     var pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
-    var entities = (userId == null)
-        ? subscriptionRepository.findAll(pageable)
-        : subscriptionRepository.findByUser_Id(userId, pageable);
+
+    var entities = subscriptionRepository.findAll(pageable);
+    if (userId != null && status != null) {
+      entities = subscriptionRepository.findByUser_IdAndStatus(userId, status, pageable);
+    } else if (userId != null) {
+      entities = subscriptionRepository.findByUser_Id(userId, pageable);
+    } else if (status != null) {
+      entities = subscriptionRepository.findByStatus(status, pageable);
+    }
 
     var items = entities.getContent().stream()
         .map(e -> new Subscription(
@@ -102,6 +112,7 @@ public class SubscriptionController {
     }
 
     e.setStatus(next);
+    e.setUpdatedAt(Instant.now());
     SubscriptionEntity saved = subscriptionRepository.save(e);
     return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
   }

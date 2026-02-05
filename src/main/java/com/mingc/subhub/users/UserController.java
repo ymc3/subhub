@@ -38,9 +38,11 @@ public class UserController {
     });
 
     UserEntity e = new UserEntity();
+    var now = Instant.now();
     e.setName(req.name());
     e.setEmail(req.email());
-    e.setCreatedAt(Instant.now());
+    e.setCreatedAt(now);
+    e.setUpdatedAt(now);
 
     UserEntity saved = userRepository.save(e);
     return new User(saved.getId(), saved.getName(), saved.getEmail());

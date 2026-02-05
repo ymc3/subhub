@@ -82,6 +82,18 @@ By user:
 curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&page=0&size=20'
 ```
 
+By status:
+
+```bash
+curl -sS 'http://127.0.0.1:8080/subscriptions?status=ACTIVE&page=0&size=20'
+```
+
+By user + status:
+
+```bash
+curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&status=ACTIVE&page=0&size=20'
+```
+
 Response shape:
 
 ```json
