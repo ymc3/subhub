@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,5 +49,23 @@ public class SubscriptionController {
     SubscriptionEntity e = subscriptionRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("subscription not found: " + id));
     return new Subscription(e.getId(), e.getUser().getId(), e.getPlan(), e.getStatus());
+  }
+
+  @PutMapping("/subscriptions/{id}")
+  public Subscription updateStatus(@PathVariable long id, @Valid @RequestBody UpdateSubscriptionStatusRequest req) {
+    SubscriptionEntity e = subscriptionRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("subscription not found: " + id));
+
+    // Minimal state machine rules (can be expanded later)
+    SubscriptionStatus current = e.getStatus();
+    SubscriptionStatus next = req.status();
+
+    if (current == SubscriptionStatus.CANCELED && next != SubscriptionStatus.CANCELED) {
+      throw new IllegalArgumentException("cannot transition from CANCELED to " + next);
+    }
+
+    e.setStatus(next);
+    SubscriptionEntity saved = subscriptionRepository.save(e);
+    return new Subscription(saved.getId(), saved.getUser().getId(), saved.getPlan(), saved.getStatus());
   }
 }

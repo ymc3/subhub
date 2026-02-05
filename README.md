@@ -59,7 +59,19 @@ curl -sS -X POST http://127.0.0.1:8080/subscriptions \
 ### Get subscription
 
 ```bash
-curl -sS http://127.0.0.1:8080/subscriptions/5001
+curl -sS http://127.0.0.1:8080/subscriptions/1
+```
+
+### Update subscription status (activate/cancel)
+
+```bash
+curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"status":"ACTIVE"}'
+
+curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
+  -H 'Content-Type: application/json' \
+  -d '{"status":"CANCELED"}'
 ```
 
 ## Notes
