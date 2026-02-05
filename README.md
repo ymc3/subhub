@@ -23,7 +23,7 @@ mvn spring-boot:run
 ## Health check
 
 ```bash
-curl http://127.0.0.1:8080/health
+curl http://127.0.0.1:8080/api/health
 ```
 
 Example response:
@@ -37,7 +37,7 @@ Example response:
 ### Create user
 
 ```bash
-curl -sS -X POST http://127.0.0.1:8080/users \
+curl -sS -X POST http://127.0.0.1:8080/api/users \
   -H 'Content-Type: application/json' \
   -d '{"name":"Alice","email":"alice@example.com"}'
 ```
@@ -45,19 +45,19 @@ curl -sS -X POST http://127.0.0.1:8080/users \
 ### Get user
 
 ```bash
-curl -sS http://127.0.0.1:8080/users/1
+curl -sS http://127.0.0.1:8080/api/users/1
 ```
 
 ### Get user with subscriptions
 
 ```bash
-curl -sS http://127.0.0.1:8080/users/1/with-subscriptions
+curl -sS http://127.0.0.1:8080/api/users/1/with-subscriptions
 ```
 
 ### Create subscription (defaults to TRIAL)
 
 ```bash
-curl -sS -X POST http://127.0.0.1:8080/subscriptions \
+curl -sS -X POST http://127.0.0.1:8080/api/subscriptions \
   -H 'Content-Type: application/json' \
   -d '{"userId":1001,"plan":"basic"}'
 ```
@@ -65,7 +65,7 @@ curl -sS -X POST http://127.0.0.1:8080/subscriptions \
 ### Get subscription
 
 ```bash
-curl -sS http://127.0.0.1:8080/subscriptions/1
+curl -sS http://127.0.0.1:8080/api/subscriptions/1
 ```
 
 ### List subscriptions (paged)
@@ -73,25 +73,25 @@ curl -sS http://127.0.0.1:8080/subscriptions/1
 All subscriptions:
 
 ```bash
-curl -sS 'http://127.0.0.1:8080/subscriptions?page=0&size=20'
+curl -sS 'http://127.0.0.1:8080/api/subscriptions?page=0&size=20'
 ```
 
 By user:
 
 ```bash
-curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&page=0&size=20'
+curl -sS 'http://127.0.0.1:8080/api/subscriptions?userId=1&page=0&size=20'
 ```
 
 By status:
 
 ```bash
-curl -sS 'http://127.0.0.1:8080/subscriptions?status=ACTIVE&page=0&size=20'
+curl -sS 'http://127.0.0.1:8080/api/subscriptions?status=ACTIVE&page=0&size=20'
 ```
 
 By user + status:
 
 ```bash
-curl -sS 'http://127.0.0.1:8080/subscriptions?userId=1&status=ACTIVE&page=0&size=20'
+curl -sS 'http://127.0.0.1:8080/api/subscriptions?userId=1&status=ACTIVE&page=0&size=20'
 ```
 
 Response shape:
@@ -111,7 +111,7 @@ Response shape:
 Option A (generic):
 
 ```bash
-curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
+curl -sS -X PUT http://127.0.0.1:8080/api/subscriptions/1 \
   -H 'Content-Type: application/json' \
   -d '{"status":"ACTIVE"}'
 ```
@@ -119,8 +119,8 @@ curl -sS -X PUT http://127.0.0.1:8080/subscriptions/1 \
 Option B (actions):
 
 ```bash
-curl -sS -X POST http://127.0.0.1:8080/subscriptions/1/activate
-curl -sS -X POST http://127.0.0.1:8080/subscriptions/1/cancel
+curl -sS -X POST http://127.0.0.1:8080/api/subscriptions/1/activate
+curl -sS -X POST http://127.0.0.1:8080/api/subscriptions/1/cancel
 ```
 
 ## Notes

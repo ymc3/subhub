@@ -20,4 +20,6 @@ jobs:
           cache: maven
 
       - name: Run tests
+        env:
+          RUN_IT: "1"
         run: mvn -q test
